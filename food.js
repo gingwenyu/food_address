@@ -53,7 +53,7 @@ request(url, (err, res, body) => {
     });    
     let linkList = [];
     let address = [];
-    // console.log(address,typeof(address));
+    console.log("line 56", address);  // []
     for (let i = 0; i < store.length; i++) {
         
         const data = [{
@@ -66,7 +66,7 @@ request(url, (err, res, body) => {
         // console.log(data);  //typeof(data) is object
             
         data.map(item => {
-            linkList.push(Object.values(item)[3]) 
+            linkList.push(Object.values(item)[3]); 
         });
         
                 
@@ -83,30 +83,71 @@ request(url, (err, res, body) => {
     }
         
         // console.log(linkList[50]);  //一筆資料
+        // 原本寫法
+        // for (let i = 0; i < store.length; i++) {
+        //     const urlInnerpage = linkList[i];
+        //     https.get(urlInnerpage, (res) => {
+        //         var html = ""
+        //         res.on("data", (data) => {
+        //             html += data
+        //         })
+
+        //         res.on("end", () => {                
+        //             const $ = cheerio.load(html);
+        //             //console.log(html);                
+        //             // let address = [];
+        //             $('.panel .tab-panel .panel-wrapper .content p.vendor-location').each(function (i, elem) {
+        //                 address.push($(this).text());
+        //                 // console.log(address,typeof(address));  //all address done，外層抓不到address                        
+        //             })                
+        //             // console.log("line 102 test", address);  //重複太多次
+        //         })
+        //          console.log("line 104 test", address[5]);  //重複太多次
+        //     }).on("error", (e) => {
+        //         // console.log(`获取数据失败: ${e.message}`)
+        //     })    
+
+        // }
+        // // console.log("line 110 test", address);  //  []
+
+
+        // 測試中
+             
+        let linkListStr = "";
         for (let i = 0; i < store.length; i++) {
-            const urlInnerpage = linkList[i];
-            https.get(urlInnerpage, (res) => {
-                var html = ""
-                res.on("data", (data) => {
-                    html += data
-                })
-
-                res.on("end", () => {                
-                    const $ = cheerio.load(html);
-                    //console.log(html);                
-                    // let address = [];
-                    $('.panel .tab-panel .panel-wrapper .content p.vendor-location').each(function (i, elem) {
-                        address.push($(this).text());
-                        // console.log(address,typeof(address));  //all address done，外層抓不到address
-                        
-                    })                
-                
-                })
-            }).on("error", (e) => {
-                // console.log(`获取数据失败: ${e.message}`)
-            })    
-
+           
+            // console.log("line 119",typeof (linkList[i]));  //string
+            linkListStr = linkList[i];
+            console.log("line 121", linkList[i]);
         }
+        
+        console.log("line 124", linkListStr);  //是最末一筆資料
+
+
+        https.get(linkListStr, (res) => {
+            console.log("line 128", linkListStr);  //是最末一筆資料
+            var html = ""
+            res.on("data", (data) => {
+                html += data
+            })
+
+            res.on("end", () => {                
+                const $ = cheerio.load(html);
+                //console.log(html);                
+                // let address = [];
+                $('.panel .tab-panel .panel-wrapper .content p.vendor-location').each(function (i, elem) {
+                    address.push($(this).text());
+                    console.log("line 140", address, address.length);  //一筆資料                         
+                })                
+                    // console.log("line 142", address, address.length);  //
+            })
+            // console.log("line 144", address);  
+        }).on("error", (e) => {
+            // console.log(`获取数据失败: ${e.message}`)
+        })    
+
+
+        
 
         
 
